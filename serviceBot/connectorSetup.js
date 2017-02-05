@@ -1,6 +1,6 @@
 module.exports = function () {
 
-    global.restify = require('restify');
+    var restify = require('restify');
     global.builder = require('botbuilder');
 
     //If testing via the emulator, no need for appId and appPassword. If publishing, enter appId and appPassword here 

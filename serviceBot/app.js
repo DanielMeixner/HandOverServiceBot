@@ -19,17 +19,20 @@ intents.onDefault(
 
 bot.dialog('/start', [
     function (session) {
-        var choices = ["Account and Payment", "Using Spotify"]
-        var helloString = "Hi there! Welcome ...";
-        builder.Prompts.choice(session, helloString, choices, { listStyle: builder.ListStyle.button });
+        var choices = ["Account", "Payment", "Using Spotify"]
+        var helloString = "Hi there! Welcome to the Spotify Customer Service. My name is sBOTify, how can I help you today?<br /><br />Please select one of the following topics. You can also type your question below.";
+        builder.Prompts.choice(session, helloString, choices, { listStyle: builder.ListStyle.button }); 
     },
     function (session, results) {
         if (results.response) {
             var selection = results.response.entity;
             // route to corresponding dialogs
             switch (selection) {
-                case "Account and Payment":
+                case "Account":
                     session.replaceDialog('/accountSupport');
+                    break;
+                case "Payment":
+                    session.replaceDialog('/paymentSupport');
                     break;
                 case "Using Spotify":
                     session.replaceDialog('/postConversation');
