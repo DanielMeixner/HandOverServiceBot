@@ -1,8 +1,6 @@
 require('./connectorSetup.js')();
 require('./dialogs/accountSupport.js')();
-
-
-
+require('./dialogs/postConversation.js')();
 
 
 //=========================================================
@@ -37,7 +35,7 @@ bot.dialog('/start', [
                     session.replaceDialog('/paymentSupport');
                     break;
                 case "Using Spotify":
-                    session.replaceDialog('/userSupport');
+                    session.replaceDialog('/postConversation');
                     break;
                 default:
                     session.reset('/');
@@ -50,6 +48,7 @@ bot.dialog('/start', [
 bot.dialog('/help', function (session) {
     session.endDialog("\n* 'home' to start again; \n* 'result' to show previous results; \n* 'search' to start a new search; \n* 'bye' to end conversation");
 });
+
 
 
 
