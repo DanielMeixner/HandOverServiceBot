@@ -13,9 +13,11 @@
     <link href="~/Styles/DefaultStyles.css" rel="stylesheet" />
 </head>
 <body>
-    <h1>Nice Service Portal with Bot Interaction</h1>
-    <div class="flexcontainer" id="userCasesContainer">
-
+    <div id="header" class="flexcontainer-v">
+        <img src="~/Images/bot-framework-logo.png" alt="Bot Framework Logo" height="75" style="margin: 10px" />
+        <h1>Welcome to your Service Chat Dashboard</h1>
+    </div>
+    <div class="flexcontainer-v" id="userCasesContainer">
     </div>
     <script src="~/Scripts/jquery-1.6.4.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
@@ -26,7 +28,7 @@
             userConversationHubProxy.client.addNewUserConversationToPage = function (userchat) {
                 console.log('Starting to add new user converstation');
                 var userChatObject = JSON.parse(userchat);
-                $('#userCasesContainer').append('<div class="conversationContainer"><div><h3>User Information</h3><div>Customer Number:' + userChatObject.customerNumber + '</div></div><iframe class="chatframe" src="https://webchat.botframework.com/embed/HandOverServiceBot?s=NHQoSKJqUbA.cwA.lvA.OBNc2JFUZmtnUtxCKDidBhMZHYSBdICeuQ5P8mxOmRo"></iframe></div>');
+                $('#userCasesContainer').append('<div class="conversationContainer"><div class="userInformation"><h2>User Information</h2><div>Conversation ID: ' + userChatObject.userConversationId + '</div><div>Customer Number: ' + userChatObject.customerNumber + '</div></div><iframe class="chatframe" src="https://webchat.botframework.com/embed/HandOverServiceBot?s=NHQoSKJqUbA.cwA.lvA.OBNc2JFUZmtnUtxCKDidBhMZHYSBdICeuQ5P8mxOmRo"></iframe></div>');
                 console.log('Added a new conversation');
             };
             $.connection.hub.start().done(function () {

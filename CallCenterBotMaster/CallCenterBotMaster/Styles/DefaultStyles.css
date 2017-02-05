@@ -1,8 +1,14 @@
 ﻿body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 100;
 }
 
-.flexcontainer {
+.flexcontainer-v {
     display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row;
+}
+
+#header {
+    padding: 5px;
 }
 
 .conversationContainer {
@@ -11,7 +17,16 @@
     padding: 5px;
 }
 
+.userInformation {
+    padding: 5px;
+}
+
 .chatframe {
     width: 400px;
-    height: 600px;
+    height: 550px;
+}
+
+h2 {
+    padding: 0px;
+    margin: 0px;
 }
