@@ -26,7 +26,7 @@
             userConversationHubProxy.client.addNewUserConversationToPage = function (userchat) {
                 console.log('Starting to add new user converstation');
                 var userChatObject = JSON.parse(userchat);
-                $('#userCasesContainer').append('<div id="conversationContainer"><div><h3>User Information</h3><div>Customer Number:' + userChatObject.customerNumber + '</div></div><iframe class="chatframe" src="https://webchat.botframework.com/embed/HandOverServiceBot?s=NHQoSKJqUbA.cwA.lvA.OBNc2JFUZmtnUtxCKDidBhMZHYSBdICeuQ5P8mxOmRo"></iframe></div>');
+                $('#userCasesContainer').append('<div class="conversationContainer"><div><h3>User Information</h3><div>Customer Number:' + userChatObject.customerNumber + '</div></div><iframe class="chatframe" src="https://webchat.botframework.com/embed/HandOverServiceBot?s=NHQoSKJqUbA.cwA.lvA.OBNc2JFUZmtnUtxCKDidBhMZHYSBdICeuQ5P8mxOmRo"></iframe></div>');
                 console.log('Added a new conversation');
             };
             $.connection.hub.start().done(function () {
