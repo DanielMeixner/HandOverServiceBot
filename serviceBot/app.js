@@ -21,7 +21,7 @@ bot.dialog('/start', [
     function (session) {
         var choices = ["Account", "Payment", "Using Spotify"]
         var helloString = "Hi there! Welcome to the Spotify Customer Service. My name is sBOTify, how can I help you today?<br /><br />Please select one of the following topics. You can also type your question below.";
-        builder.Prompts.choice(session, helloString, choices, { listStyle: builder.ListStyle.button });
+        builder.Prompts.choice(session, helloString, choices, { listStyle: builder.ListStyle.button }); 
     },
     function (session, results) {
         if (results.response) {
