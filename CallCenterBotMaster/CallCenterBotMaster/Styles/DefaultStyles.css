@@ -1,0 +1,17 @@
+﻿body {
+}
+
+.flexcontainer {
+    display: -webkit-flex; display: flex; -webkit-flex-direction: row; flex-direction: row;
+}
+
+#conversationContainer {
+    width: 410px;
+    height: 800px;
+    padding: 5px;
+}
+
+.chatframe {
+    width: 400px;
+    height: 600px;
+}

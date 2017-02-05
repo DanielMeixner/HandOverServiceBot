@@ -10,11 +10,13 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>View</title>
+    <link href="~/Styles/DefaultStyles.css" rel="stylesheet" />
 </head>
 <body>
-    <div> 
-    </div>
+    <h1>Nice Service Portal with Bot Interaction</h1>
+    <div class="flexcontainer" id="userCasesContainer">
 
+    </div>
     <script src="~/Scripts/jquery-1.6.4.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
     <script src="~/signalr/hubs"></script>
@@ -22,7 +24,9 @@
         $(function () {
             var userConversationHubProxy = $.connection.userConversationHub;
             userConversationHubProxy.client.addNewUserConversationToPage = function (userchat) {
-                console.log(userchat);
+                console.log('Starting to add new user converstation');
+                $('#userCasesContainer').append('<div id="conversationContainer"><div>Some usefull information about the user goes here.</div><iframe class="chatframe" src="https://webchat.botframework.com/embed/HandOverServiceBot?s=NHQoSKJqUbA.cwA.lvA.OBNc2JFUZmtnUtxCKDidBhMZHYSBdICeuQ5P8mxOmRo"></iframe></div>');
+                console.log('Added a new conversation');
             };
             $.connection.hub.start().done(function () {
                 console.log("Hub startet");
