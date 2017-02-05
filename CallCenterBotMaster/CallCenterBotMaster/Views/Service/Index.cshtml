@@ -1,0 +1,41 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View</title>
+</head>
+<body>
+    <div> 
+    </div>
+
+    <script src="~/Scripts/jquery-1.6.4.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            var userConversationHubProxy = $.connection.userConversationHub;
+            userConversationHubProxy.client.addNewUserConversationToPage = function (userchat) {
+                console.log(userchat);
+            };
+            $.connection.hub.start().done(function () {
+                console.log("Hub startet");
+
+            });
+        });
+    //$.connection.hub.start().done(function () {
+    //    // Wire up Send button to call NewContosoChatMessage on the server.
+    //    $('#newContosoChatMessage').click(function () {
+    //        contosoChatHubProxy.server.newContosoChatMessage($('#displayname').val(), $('#message').val());
+    //        $('#message').val('').focus();
+    //    });
+    //});
+    </script>
+</body>
+</html>
