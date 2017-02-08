@@ -127,13 +127,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <None Include="Properties\PublishProfiles\CallCenterBotMaster - Web Deploy Dev.pubxml" />
     <None Include="Properties\PublishProfiles\CallCenterBotMaster - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\CallCenterBotMaster-dev - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Images\bot-framework-logo.png" />
+    <Content Include="Scripts\botchat.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.js" />
     <Content Include="Scripts\jquery.signalR-2.2.1.min.js" />
+    <Content Include="Styles\botchat.css" />
     <Content Include="Styles\DefaultStyles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

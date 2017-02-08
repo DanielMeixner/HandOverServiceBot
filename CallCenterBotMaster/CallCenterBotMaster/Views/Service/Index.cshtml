@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>View</title>
     <link href="~/Styles/DefaultStyles.css" rel="stylesheet" />
+    <link href="~/Styles/botchat.css" rel="stylesheet" />
 </head>
 <body>
     <div id="header" class="flexcontainer-v">
@@ -22,27 +23,54 @@
     <script src="~/Scripts/jquery-1.6.4.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
     <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/botchat.js"></script>
     <script>
+        // Gobal counter for the number of chat windows
+        var numberOfChats = 0;
+          
         $(function () {
+
             var userConversationHubProxy = $.connection.userConversationHub;
             userConversationHubProxy.client.addNewUserConversationToPage = function (userchat) {
+
                 console.log('Starting to add new user converstation');
+
                 var userChatObject = JSON.parse(userchat);
-                $('#userCasesContainer').append('<div class="conversationContainer"><div class="userInformation"><h2>User Information</h2><div>Conversation ID: ' + userChatObject.userConversationId + '</div><div>Customer Number: ' + userChatObject.customerNumber + '</div></div><iframe class="chatframe" src="https://webchat.botframework.com/embed/HandOverServiceBot?s=NHQoSKJqUbA.cwA.lvA.OBNc2JFUZmtnUtxCKDidBhMZHYSBdICeuQ5P8mxOmRo"></iframe></div>');
+
+                //Add a new chat frame element to the page
+                $('#userCasesContainer').append('<div class="conversationContainer"><div class="userInformation"><h2>User Information</h2><div>Conversation ID: ' + userChatObject.userConversationId + '</div><div>Customer Number: ' + userChatObject.customerNumber + '</div></div><div class="chatframe" id="chatframe_' + ++numberOfChats + '"></div></div>');
+                
+                var user = {
+                    id: '',
+                    name: 'Call Center Agent'
+                };
+
+                var bot = {
+                    id: '',
+                    name: ''
+                };
+
+                //Add a new web chat to the new chat frame
+                BotChat.App({
+                    directLine: {
+                        secret: '4Ty6OeWHM04.cwA.Wzk.qRarqUjkBztUk0dPI6dDf_beAd6Ntw-Qoxc-iNZg7u0',
+                        token: '',
+                        domain: '',
+                        webSocket: '' // defaults to true
+                    },
+                    user: user,
+                    bot: bot,
+                    locale: '',
+                    // sendTyping: true,    // defaults to false. set to true to send 'typing' activities to bot (and other users) when user is typing
+                }, document.getElementById("chatframe_" + numberOfChats));
+
                 console.log('Added a new conversation');
             };
-            $.connection.hub.start().done(function () {
-                console.log("Hub startet");
 
+            $.connection.hub.start().done(function () {
+                console.log("Hub started");
             });
         });
-    //$.connection.hub.start().done(function () {
-    //    // Wire up Send button to call NewContosoChatMessage on the server.
-    //    $('#newContosoChatMessage').click(function () {
-    //        contosoChatHubProxy.server.newContosoChatMessage($('#displayname').val(), $('#message').val());
-    //        $('#message').val('').focus();
-    //    });
-    //});
     </script>
 </body>
 </html>

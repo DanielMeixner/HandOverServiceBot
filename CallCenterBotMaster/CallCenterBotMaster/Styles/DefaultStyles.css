@@ -12,9 +12,10 @@
 }
 
 .conversationContainer {
-    width: 410px;
-    height: 800px;
-    padding: 5px;
+    width: 310px;
+    height: 450px;
+    margin: 5px;
+    position: relative;
 }
 
 .userInformation {
@@ -22,11 +23,16 @@
 }
 
 .chatframe {
-    width: 400px;
-    height: 550px;
+    width: 300px;
+    height: 100%;
+    position: relative;
 }
 
 h2 {
     padding: 0px;
     margin: 0px;
+}
+
+#userCasesContainer {
+    margin-left: 5px;
 }
