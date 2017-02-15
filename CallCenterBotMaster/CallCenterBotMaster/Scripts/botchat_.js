@@ -22021,8 +22021,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                });
 	            });
 	        }
-	        //sendMessage(new Dispatch<HistoryAction>(), "Test", this.props.user, this.props.locale);
-	        exports.sendPostBack(botConnection, this.props.customerConversationId, this.props.user, this.props.locale);
 	    };
 	    Chat.prototype.componentWillUnmount = function () {
 	        this.connectionStatusSubscription.unsubscribe();
@@ -22181,7 +22179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.domain = options.domain;
 	        if (options.webSocket !== undefined)
 	            this.webSocket = options.webSocket;
-	        this.activity$ = this.webSocket && typeof WebSocket !== 'undefined' && WebSocket
+	        this.activity$ = this.webSocket && WebSocket !== undefined
 	            ? this.webSocketActivity$()
 	            : this.pollingGetActivity$();
 	    }
@@ -27192,7 +27190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    HistoryContainer.prototype.onClickRetry = function (activity) {
 	        this.props.dispatch({ type: 'Send_Message_Retry', clientActivityId: activity.channelData.clientActivityId });
 	    };
-	    HistoryContainer.prototype.onCardAction = function (type, value) {
+	    HistoryContainer.prototype.onClickButton = function (type, value) {
 	        switch (type) {
 	            case "imBack":
 	                Chat_1.sendMessage(this.props.dispatch, value, this.props.user, this.props.format.locale);
@@ -27220,7 +27218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _this = this;
 	        return (React.createElement("div", { className: "wc-message-groups", ref: function (div) { return _this.scrollMe = div; } },
 	            React.createElement("div", { className: "wc-message-group-content", ref: function (div) { return _this.scrollContent = div; } }, this.props.activities.map(function (activity, index) {
-	                return React.createElement(WrappedActivity, { key: 'message' + index, activity: activity, showTimestamp: index === _this.props.activities.length - 1 || (index + 1 < _this.props.activities.length && suitableInterval(activity, _this.props.activities[index + 1])), selected: activity === _this.props.selectedActivity, fromMe: activity.from.id === _this.props.user.id, format: _this.props.format, onCardAction: function (type, value) { return _this.onCardAction(type, value); }, onClickActivity: _this.props.selectedActivitySubject && (function () { return _this.onSelectActivity(activity); }), onClickRetry: function (e) {
+	                return React.createElement(WrappedActivity, { key: 'message' + index, activity: activity, showTimestamp: index === _this.props.activities.length - 1 || (index + 1 < _this.props.activities.length && suitableInterval(activity, _this.props.activities[index + 1])), selected: activity === _this.props.selectedActivity, fromMe: activity.from.id === _this.props.user.id, format: _this.props.format, onClickButton: function (type, value) { return _this.onClickButton(type, value); }, onClickActivity: _this.props.selectedActivitySubject && (function () { return _this.onSelectActivity(activity); }), onClickRetry: function (e) {
 	                        // Since this is a click on an anchor, we need to stop it
 	                        // from trying to actually follow a (nonexistant) link
 	                        e.preventDefault();
@@ -27305,7 +27303,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    React.createElement("svg", { className: "wc-message-callout" },
 	                        React.createElement("path", { className: "point-left", d: "m0,6 l6 6 v-12 z" }),
 	                        React.createElement("path", { className: "point-right", d: "m6,6 l-6 6 v-12 z" })),
-	                    React.createElement(ActivityView_1.ActivityView, { activity: this.props.activity, format: this.props.format, onCardAction: this.props.onCardAction, onImageLoad: this.props.onImageLoad, measureParentHorizontalOverflow: function () { return measureOuterWidth(_this.messageDiv) - _this.messageDiv.offsetParent.offsetWidth; } }))),
+	                    React.createElement(ActivityView_1.ActivityView, { activity: this.props.activity, format: this.props.format, onClickButton: this.props.onClickButton, onImageLoad: this.props.onImageLoad, measureParentHorizontalOverflow: function () { return measureOuterWidth(_this.messageDiv) - _this.messageDiv.offsetParent.offsetWidth; } }))),
 	            React.createElement("div", { className: 'wc-message-from wc-message-from-' + who }, timeLine)));
 	    };
 	    return WrappedActivity;
@@ -27388,6 +27386,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        .map(function (key) { return encodeURIComponent(key) + '=' + encodeURIComponent(query[key].toString()); })
 	        .join('&');
 	};
+	var buttons = function (buttons, onClickButton) { return buttons &&
+	    React.createElement("ul", { className: "wc-card-buttons" }, buttons.map(function (button, index) { return React.createElement("li", { key: index },
+	        React.createElement("button", { onClick: function () { return onClickButton(button.type, button.value); } }, button.title)); })); };
 	var Youtube = function (props) {
 	    return React.createElement("iframe", { type: "text/html", src: "https://" + YOUTUBE_DOMAIN + "/embed/" + props.embedId + "?" + queryString({
 	            modestbranding: '1',
@@ -27433,6 +27434,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            return React.createElement("img", tslib_1.__assign({}, props));
 	    }
 	};
+	var attachedImage = function (images, onImageLoad, onClickButton // Enables FlexCards in Emulator
+	) {
+	    if (!images || images.length === 0)
+	        return null;
+	    var image = images[0];
+	    var tap = onClickButton && image.tap;
+	    return React.createElement(Media, { src: image.url, onLoad: onImageLoad, onClick: tap && (function () { return onClickButton(tap.type, tap.value); }) });
+	};
 	var mediaType = function (url) {
 	    return url.slice((url.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase() == 'gif' ? 'image' : 'video';
 	};
@@ -27443,35 +27452,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!props.attachment)
 	        return;
 	    var attachment = props.attachment;
-	    var onCardAction = function (cardAction) { return cardAction &&
-	        (function (e) {
-	            props.onCardAction(cardAction.type, cardAction.value);
-	            e.stopPropagation();
-	        }); };
-	    var buttons = function (buttons) { return buttons &&
-	        React.createElement("ul", { className: "wc-card-buttons" }, buttons.map(function (button, index) { return React.createElement("li", { key: index },
-	            React.createElement("button", { onClick: onCardAction(button) }, button.title)); })); };
-	    var attachedImage = function (images) { return images && images.length > 0 &&
-	        React.createElement(Media, { src: images[0].url, onLoad: props.onImageLoad, onClick: onCardAction(images[0].tap) }); };
 	    switch (attachment.contentType) {
 	        case "application/vnd.microsoft.card.hero":
 	            if (!attachment.content)
 	                return null;
-	            return (React.createElement("div", { className: 'wc-card hero', onClick: onCardAction(attachment.content.tap) },
-	                attachedImage(attachment.content.images),
+	            return (React.createElement("div", { className: 'wc-card hero' },
+	                attachedImage(attachment.content.images, props.onImageLoad),
 	                title(attachment.content.title),
 	                subtitle(attachment.content.subtitle),
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "application/vnd.microsoft.card.thumbnail":
 	            if (!attachment.content)
 	                return null;
-	            return (React.createElement("div", { className: 'wc-card thumbnail', onClick: onCardAction(attachment.content.tap) },
+	            return (React.createElement("div", { className: 'wc-card thumbnail' },
 	                title(attachment.content.title),
-	                attachedImage(attachment.content.images),
+	                attachedImage(attachment.content.images, props.onImageLoad),
 	                subtitle(attachment.content.subtitle),
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "application/vnd.microsoft.card.video":
 	            if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
 	                return null;
@@ -27480,7 +27479,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                title(attachment.content.title),
 	                subtitle(attachment.content.subtitle),
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "application/vnd.microsoft.card.animation":
 	            if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
 	                return null;
@@ -27489,7 +27488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                title(attachment.content.title),
 	                subtitle(attachment.content.subtitle),
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "application/vnd.microsoft.card.audio":
 	            if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
 	                return null;
@@ -27498,17 +27497,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                title(attachment.content.title),
 	                subtitle(attachment.content.subtitle),
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "application/vnd.microsoft.card.signin":
 	            if (!attachment.content)
 	                return null;
 	            return (React.createElement("div", { className: 'wc-card signin' },
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "application/vnd.microsoft.card.receipt":
 	            if (!attachment.content)
 	                return null;
-	            return (React.createElement("div", { className: 'wc-card receipt', onClick: onCardAction(attachment.content.tap) },
+	            return (React.createElement("div", { className: 'wc-card receipt' },
 	                React.createElement("table", null,
 	                    React.createElement("thead", null,
 	                        React.createElement("tr", null,
@@ -27517,7 +27516,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            React.createElement("th", null, fact.key),
 	                            React.createElement("th", null, fact.value)); })),
 	                    React.createElement("tbody", null, attachment.content.items && attachment.content.items.map(function (item, i) {
-	                        return React.createElement("tr", { key: 'item' + i, onClick: onCardAction(item.tap) },
+	                        return React.createElement("tr", { key: 'item' + i },
 	                            React.createElement("td", null,
 	                                item.image && React.createElement(Media, { src: item.image.url, onLoad: props.onImageLoad }),
 	                                Chat_1.renderIfNonempty(item.title, function (title) { return React.createElement("div", { className: "title" }, item.title); }),
@@ -27531,17 +27530,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        Chat_1.renderIfNonempty(attachment.content.total, function (total) { return React.createElement("tr", { className: "total" },
 	                            React.createElement("td", null, props.format.strings.receiptTotal),
 	                            React.createElement("td", null, attachment.content.total)); }))),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
 	        case "application/vnd.microsoft.card.flex":
 	            if (!attachment.content)
 	                return null;
 	            return (React.createElement("div", { className: 'wc-card flex' },
-	                attachedImage(attachment.content.images),
+	                attachedImage(attachment.content.images, props.onImageLoad, props.onClickButton),
 	                title(attachment.content.title),
 	                subtitle(attachment.content.subtitle),
 	                text(attachment.content.text),
-	                buttons(attachment.content.buttons)));
+	                buttons(attachment.content.buttons, props.onClickButton)));
 	        case "image/png":
 	        case "image/jpg":
 	        case "image/jpeg":
@@ -27706,7 +27705,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var _this = this;
 	        return (React.createElement("ul", null, this.props.attachments.map(function (attachment, index) {
 	            return React.createElement("li", { key: index, className: "wc-carousel-item" },
-	                React.createElement(Attachment_1.AttachmentView, { attachment: attachment, format: _this.props.format, onCardAction: _this.props.onCardAction, onImageLoad: function () { return _this.props.onImageLoad(); } }));
+	                React.createElement(Attachment_1.AttachmentView, { attachment: attachment, format: _this.props.format, onClickButton: _this.props.onClickButton, onImageLoad: function () { return _this.props.onImageLoad(); } }));
 	        })));
 	    };
 	    return CarouselAttachments;
